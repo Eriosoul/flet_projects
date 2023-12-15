@@ -25,47 +25,61 @@ class ColectingData(ft.Container):
     def __init__(self):
         super().__init__(**data_style["main"])
 
-        # save buttont to calculata masa
-        self.add = ft.ElevatedButton(
+        self.peso = ft.TextField(hint_text="Peso...", **data_style["input"])
+        self.altura = ft.TextField(hint_text="Altura...", **data_style["input"])
+        self.bmi_text = ft.Text(value="BMI: ")
+        self.text_number = ft.Text("0")
+        self.c = ft.Container(width=100, height=100, bgcolor=ft.colors.GREEN_200)
+
+        self.add_button = ft.ElevatedButton(
             text="Save",
             color="white",
             bgcolor="blue600",
-            height=40,
+            height=45,
             style=ft.ButtonStyle(shape={"": ft.RoundedRectangleBorder(radius=5)}),
-            on_click=self.save_data,
+            on_click=self.save_data
         )
 
-        # Data to calculate
-        self.peso = ft.TextField(hint_text="Peso...", **data_style["input"])
-        self.altura = ft.TextField(hint_text="Altura...", **data_style["input"])
-
-        # Label to display BMI
-        self.bmi_text = ft.Text("BMI: ", size=16, weight="w500", color="black")
-
         self.content = ft.Row(
-            spacing=20,
+            spacing=1,
             controls=[
                 self.peso,
                 self.altura,
-                self.add,
+                self.add_button,
                 self.bmi_text,
-                # Add the TextField for data input
-            ],
+                self.text_number
+            ]
         )
+
     def save_data(self, e):
         try:
-            # Get weight and height as float values
             weight = float(self.peso.value)
             height = float(self.altura.value)
-
-            # Calculate BMI
             bmi = weight / (height ** 2)
+            self.bmi_text.value = f"BMI: {bmi:.2f}"
+            if bmi > 24.9:
+                self.c = ft.Container(width=100, height=100, bgcolor=ft.colors.RED)
+            elif 18.5 < bmi <= 24.9:
+                self.c = ft.Container(width=100, height=100, bgcolor=ft.colors.GREEN_200)
+            else:
+                # Handle other cases if needed
+                pass
+            # updatin the data what it will show to us
+            self.content = ft.Row(
+                spacing=1,
+                controls=[
+                    self.peso,
+                    self.altura,
+                    self.add_button,
+                    self.bmi_text,
+                ]
+            )
 
-            # Update the label text
-            print(bmi)
-            self.bmi_text.text = f"BMI: {bmi:.2f}"
+            self.update()
+
         except ValueError:
             print("Invalid input. Please enter numeric values for weight and height.")
+
 
 
 
@@ -75,23 +89,21 @@ def main(page: ft.Page):
         center_title=True
     )
 
-    form = ColectingData()  # Remove the extra comma
+    form: ft.Container = ColectingData()
     page.add(
         ft.Row(
             expand=True,
-            spacing=9,
+            spacing=0,
             controls=[
-                ft.Column(
+                ft.Row(
                     expand=5,
                     controls=[form],
                 )
             ],
-        )
+
+        ),
     )
     page.update()
 
-
 if __name__ == '__main__':
     ft.app(target=main)
-
-
