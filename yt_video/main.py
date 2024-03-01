@@ -1,6 +1,18 @@
 import flet as ft
 from  moviepy import editor as mv
 from pytube import YouTube
+from datetime import datetime
+
+def check_age(birthdate):
+    # Calcula la edad del usuario en base a su fecha de nacimiento
+    today = datetime.today()
+    age = today.year - birthdate.year - ((today.month, today.day) < (birthdate.month, birthdate.day))
+    return age
+
+def verify_age(birthdate, min_age):
+    # Verifica si la edad del usuario es mayor o igual a la edad mínima requerida
+    age = check_age(birthdate)
+    return age >= min_age
 
 def main(page: ft.Page):
     page.appbar = ft.AppBar(
@@ -38,13 +50,23 @@ def main(page: ft.Page):
         else:
             try:
                 get_link = txt.value
-                mp4_video = YouTube(get_link).streams.get_highest_resolution().download()
-                vid_clip = mv.VideoFileClip(mp4_video)
-                vid_clip.close()
-                snack_bar.text = "Video descargado ..."
-                snack_bar.open = True
-                snack_bar.update()
-                print("Video descargado")
+                min_age_required = 18
+
+                birthdate = datetime(1987, 5, 15)
+                if verify_age(birthdate, min_age_required):
+                    # Si el usuario es mayor o igual a la edad mínima requerida, descarga el archivo
+                    mp4_video = YouTube(get_link).streams.get_highest_resolution().download()
+                    vid_clip = mv.VideoFileClip(mp4_video)
+                    vid_clip.close()
+                    snack_bar.text = "Video descargado ..."
+                    snack_bar.open = True
+                    snack_bar.update()
+                    print("Video descargado")
+                else:
+                    # Si el usuario no cumple con la edad mínima requerida, muestra un mensaje de error
+                    snack_bar.text = "Lo siento, debes ser mayor de 18 años para acceder a este contenido."
+                    snack_bar.open = True
+                    snack_bar.update()
             except Exception as ex:
                 snack_bar.text = "Not a YouTube URL or error"
                 snack_bar.open = True
