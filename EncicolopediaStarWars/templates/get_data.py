@@ -60,10 +60,10 @@ class TheStarWarsAPIData:
                             birth_year: str = person_data.get("birth_year")
                             gender: str = person_data.get("gender")
                             character_found = True  # Si personaje encontrado devolvemos true y cerramos bucle
-                            print(DataStarWars(
+                            return DataStarWars(
                                 name=name, height=height, hair_color=hair_color, skin_color=skin_color,
                                 eye_color=eye_color, birth_year=birth_year, gender=gender
-                            ))
+                            )
                     next_url = data.get("next")
         except requests.exceptions.RequestException as e:
             print("Error al obtener los datos:", e)
