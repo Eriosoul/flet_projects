@@ -5,6 +5,7 @@ from requests import Response
 from lib.star_wars import AllResults, DataStarWars
 
 
+
 class TheStarWarsAPIData:
     def __init__(self):
         self.url = None
@@ -38,13 +39,49 @@ class TheStarWarsAPIData:
             print("Error al obtener los datos:", e)
             return AllResults(count=0, next="", previous="", results=[])
 
-    def get_data_star_wars(self) -> DataStarWars:
-        char_name: str = "Darth Maul"
+    # def get_data_star_wars(self, char_name: str) -> DataStarWars:
+    #     name_char = char_name
+    #     print("nombre 1", name_char)
+    #     try:
+    #         character_found: bool = False
+    #         for item in self.all_url:
+    #             next_url = item
+    #             while next_url and not character_found:
+    #                 r: Response = requests.get(next_url)
+    #                 if r.status_code != 200:
+    #                     print(f'Error al obtener datos de {next_url}')
+    #                     break
+    #                 data: dict = r.json()
+    #                 print(data)
+    #                 for person_data in data["results"]:
+    #                     print(person_data)
+    #                     name: str = person_data.get("name")
+    #                     if name_char == name:
+    #                         height: str = person_data.get("height")
+    #                         hair_color: str = person_data.get("hair_color")
+    #                         skin_color: str = person_data.get("skin_color")
+    #                         eye_color: str = person_data.get("eye_color")
+    #                         birth_year: str = person_data.get("birth_year")
+    #                         gender: str = person_data.get("gender")
+    #                         character_found = True
+    #                         return DataStarWars(
+    #                             name=name, height=height, hair_color=hair_color, skin_color=skin_color,
+    #                             eye_color=eye_color, birth_year=birth_year, gender=gender
+    #                         )
+    #                     print("llegue al final")
+    #                 next_url = data.get("next")
+    #     except requests.exceptions.RequestException as e:
+    #         print("Error al obtener los datos:", e)
+    #         return DataStarWars(
+    #             name="", height="", hair_color="", skin_color="", eye_color="", birth_year="", gender=""
+    #         )
+
+    def get_data_star_wars(self, char_name: str) -> DataStarWars:
+        print("Nombre de personaje:", char_name)
         try:
-            character_found: bool = False
             for item in self.all_url:
                 next_url = item
-                while next_url and not character_found:
+                while next_url:
                     r: Response = requests.get(next_url)
                     if r.status_code != 200:
                         print(f'Error al obtener datos de {next_url}')
@@ -59,20 +96,16 @@ class TheStarWarsAPIData:
                             eye_color: str = person_data.get("eye_color")
                             birth_year: str = person_data.get("birth_year")
                             gender: str = person_data.get("gender")
-                            character_found = True  # Si personaje encontrado devolvemos true y cerramos bucle
                             return DataStarWars(
                                 name=name, height=height, hair_color=hair_color, skin_color=skin_color,
                                 eye_color=eye_color, birth_year=birth_year, gender=gender
                             )
+                        print("Encontro")
                     next_url = data.get("next")
         except requests.exceptions.RequestException as e:
             print("Error al obtener los datos:", e)
-            return DataStarWars(
-                name="", height="", hair_color="", skin_color="", eye_color="", birth_year="", gender=""
-            )
+        # Si no se encuentra el personaje, devolver un objeto DataStarWars vacío
+        return DataStarWars(
+            name="", height="", hair_color="", skin_color="", eye_color="", birth_year="", gender=""
+        )
 
-
-if __name__ == '__main__':
-    t: TheStarWarsAPIData = TheStarWarsAPIData()
-    t.check_status()
-    t.get_data_star_wars()
