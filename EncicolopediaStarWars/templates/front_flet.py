@@ -15,16 +15,27 @@ def main(page: ft.Page):
         print("El nombre es:", char_name)
         try:
             t: TheStarWarsAPIData = TheStarWarsAPIData()
-            data_star_wars = t.get_data_star_wars(char_name)  # Pasar el nombre del personaje
-            if data_star_wars:
-                # Actualizar la interfaz de usuario con los datos del personaje
-                snack_bar.text = f"Datos del personaje: {data_star_wars.name}"
-                snack_bar.open = True
-                snack_bar.update()
-                # También puedes mostrar otros datos del personaje según sea necesario
-
-            else:
-                print("Personaje no encontrado")
+            if t.check_status():
+                data_star_wars = t.get_data_star_wars(char_name)  # Pasar el nombre del personaje
+                if data_star_wars:
+                    # Actualizar la interfaz de usuario con los datos del personaje
+                    snack_bar.text = f"Datos del personaje: {data_star_wars.name}"
+                    snack_bar.open = True
+                    snack_bar.update()
+                    # También puedes mostrar otros datos del personaje según sea necesario
+                    page.add(
+                        ft.Text(f"Nombre: {data_star_wars.name}"),
+                        ft.Text(f"Cumpleaños: {data_star_wars.height}"),
+                        ft.Text(f"Color de pelo: {data_star_wars.hair_color}"),
+                        ft.Text(f"Color de piel: {data_star_wars.skin_color}"),
+                        ft.Text(f"Color de ojos: {data_star_wars.eye_color}"),
+                        ft.Text(f"Año de cumpleaños: {data_star_wars.birth_year}"),
+                        ft.Text(f"Género: {data_star_wars.gender}")
+                    #     name=name, height=height, hair_color=hair_color, skin_color=skin_color,
+                        #                                 eye_color=eye_color, birth_year=birth_year, gender=gender
+                    )
+                else:
+                    print("Personaje no encontrado")
         except Exception as ex:
             # Manejar cualquier error que ocurra durante la búsqueda
             snack_bar.text = "Error al buscar el personaje"
@@ -38,7 +49,10 @@ def main(page: ft.Page):
     page.add(
         txt,
         button,
-
+        # mostrar la data aqui
+    #     print("Nombre: ", data_star_wars.name)
+            # print("cumpleaños: ", data_star_wars.birth_year)
+            # print("Genero", data_star_wars.gender)
     )
 
 if __name__ == '__main__':

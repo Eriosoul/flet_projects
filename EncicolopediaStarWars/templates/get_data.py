@@ -100,7 +100,6 @@ class TheStarWarsAPIData:
                                 name=name, height=height, hair_color=hair_color, skin_color=skin_color,
                                 eye_color=eye_color, birth_year=birth_year, gender=gender
                             )
-                        print("Encontro")
                     next_url = data.get("next")
         except requests.exceptions.RequestException as e:
             print("Error al obtener los datos:", e)
